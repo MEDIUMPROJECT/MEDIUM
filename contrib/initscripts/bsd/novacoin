@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# PROVIDE: MEDIUM
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# MEDIUM_enable (bool): Set to NO by default. Set this variable to YES if you want to enable MEDIUM service.
+# MEDIUM_config (path): Set to /usr/local/etc/MEDIUM.conf by default.
+# MEDIUM_user:  The user account MEDIUM daemon runs as. It uses 'root' user by default.
+# MEDIUM_group: The group account MEDIUM daemon runs as. It uses 'wheel' group by default.
+# MEDIUM_datadir (str): Default to "/var/db/MEDIUM". Base data directory.
+
+. /etc/rc.subr
+
+name=MEDIUM
+rcvar=MEDIUM_enable
+
+: ${MEDIUM_enable:=NO}
+: ${MEDIUM_config=/usr/local/etc/MEDIUM.conf}
+: ${MEDIUM_datadir=/var/db/MEDIUM}
+: ${MEDIUM_user="root"}
+: ${MEDIUM_group="wheel"}
+
+required_files=${MEDIUM_config}
+command=/usr/local/bin/MEDIUMd
+MEDIUM_chdir=${MEDIUM_datadir}
+pidfile="${MEDIUM_datadir}/MEDIUMd.pid"
+stop_cmd=MEDIUM_stop
+command_args="-conf=${MEDIUM_config} -datadir=${MEDIUM_datadir} -daemon -pid=${pidfile}"
+start_precmd="${name}_prestart"
+
+MEDIUM_create_datadir()
+{
+	echo "Creating data directory"
+	eval mkdir -p ${MEDIUM_datadir}
+	[ $? -eq 0 ] && chown -R ${MEDIUM_user}:${MEDIUM_group} ${MEDIUM_datadir}
+}
+
+MEDIUM_prestart()
+{
+	if [ ! -d "${MEDIUM_datadir}/." ]; then
+		MEDIUM_create_datadir || return 1
+	fi
+}
+
+MEDIUM_requirepidfile()
+{
+	if [ ! "0`check_pidfile ${pidfile} ${command}`" -gt 1 ]; then
+		echo "${name} not running? (check $pidfile)."
+		exit 1
+	fi
+}
+
+MEDIUM_stop()
+{
+    MEDIUM_requirepidfile
+
+	echo "Stopping ${name}."
+	eval ${command} -conf=${MEDIUM_config} -datadir=${MEDIUM_datadir} stop
+	wait_for_pids ${rc_pid}
+}
+
+load_rc_config $name
+run_rc_command "$1"

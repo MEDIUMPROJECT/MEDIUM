@@ -1,0 +1,11 @@
+[Unit]
+Description=MEDIUM daemon serivce
+After=network.target
+
+[Service]
+Type=simple
+User=MEDIUM
+ExecStart=/opt/MEDIUM/MEDIUMd
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,5 @@
+MEDIUM-qt usr/bin
+share/pixmaps/MEDIUM32.xpm usr/share/pixmaps
+share/pixmaps/MEDIUM80.xpm usr/share/pixmaps
+debian/MEDIUM-qt.desktop usr/share/applications
+debian/MEDIUM-qt.protocol usr/share/kde4/services/

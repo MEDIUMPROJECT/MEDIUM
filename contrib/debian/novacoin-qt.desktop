@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=MEDIUM
+Comment=MEDIUM P2P Cryptocurrency
+Comment[ru]=MEDIUM, P2P криптовалюта
+Comment[fr]=MEDIUM, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=MEDIUM, eşten eşe kriptografik sanal para birimi
+Exec=/usr/bin/MEDIUM-qt
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/MEDIUM80.xpm
+MimeType=x-scheme-handler/MEDIUM;
+Categories=Office;
